@@ -105,3 +105,6 @@ modules.xml
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+
+### MongoDB ###
+data
