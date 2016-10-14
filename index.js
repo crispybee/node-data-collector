@@ -46,14 +46,13 @@ MongoClient.connect(url, function(err, db) {
 
 
 io.on('connection', function(client) {
-	console.log('Connected');
-	io.emit('Success', client);
+	console.log('A client connected.');
 
 	client.on('event', function(data) {
-		console.log('Event');
+		console.log('Event: ' + data);
 	});
 	client.on('disconnect', function() {
-		console.log('disconnect');
+		console.log('A client disconnected.');
 	});
 });
 server.listen(3000);
