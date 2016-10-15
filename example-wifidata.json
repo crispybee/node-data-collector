@@ -1,0 +1,26 @@
+{
+	"phoneName" : "phone1",
+	"timestamp" : "Date.now()",
+	"roomName" : "Foyer",
+	"accessPoints" : [
+		{
+			"ssid" : "eduroam",
+			"mac" : "85-BA-F6-65-63-09",
+			"etage" : "EG",
+			"distance" : 4.5
+		},
+				{
+			"ssid" : "eduroam",
+			"mac" : "99-10-F6-65-63-09",
+			"etage" : "EG",
+			"distance" : 13.4
+		},
+		{
+			"ssid" : "eduroam",
+			"mac" : "11-55-F6-65-63-09",
+			"etage" : "EG",
+			"distance" : 22.7
+		}
+
+	]
+}

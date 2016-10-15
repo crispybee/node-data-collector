@@ -1,5 +1,5 @@
 {
-  "name": "node-data-collecter",
+  "name": "node-data-collector",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://git.mi.hs-heilbronn.de/wifi-vs/node-data-collecter.git"
+    "url": "https://git.mi.hs-heilbronn.de/wifi-vs/node-data-collector.git"
   },
   "author": "",
   "license": "ISC",
