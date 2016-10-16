@@ -1,6 +1,11 @@
 var server = require('http').createServer();
 var io = require('socket.io')(server);
-var MongoClient = require('mongodb').MongoClient, assert = require('assert');
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+
+// database URL
+var url = 'mongodb://localhost:27017/wifiscan';
+var port = 3000;
 
 var saveToDatabase = function(db, jsonData, callback) {
 
@@ -8,53 +13,45 @@ var saveToDatabase = function(db, jsonData, callback) {
   var collection = db.collection('wifiData');
 
   // Insert data
-  collection.insertMany(jsonData, function(err, result) {
+  collection.insertOne(jsonData, function(err, result) {
 
-    console.log("Inserted object into wifiData collection");
-    callback(result);
+  	console.log("Inserted object into wifiData collection");
+  	callback(result);
   });
 };
 
-// Connection URL
-var url = 'mongodb://localhost:27017/wifiscan';
+function addToMongoDB(jsonData) {
+	// Use connect method to connect to the Server
+	MongoClient.connect(url, function(err, db) {
+		assert.equal(null, err);
+		console.log("Connected correctly to server");
 
-// Use connect method to connect to the Server
-MongoClient.connect(url, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected correctly to server");
-
-  var phoneNameString = "phone1";
-  var timestampString = Date.now();
-  var roomNameString = "Mensa";
-  var accessPointsDistance = [
-    {eduroam: 2.7},
-    {eduroam: 5.2},
-    {eduroam: 22.4}
-  ];
-
-  var jsonData = [{
-    "phoneName" : phoneNameString,
-    "timestamp" : timestampString,
-    "roomName" : roomNameString,
-    "accessPoints": accessPointsDistance
-  }];
-
-  saveToDatabase(db, jsonData, function () {
-  	db.close();
-  });
-});
-
+	  	saveToDatabase(db, jsonData, function () {
+  			db.close();
+  		});
+  	});
+}
 
 io.on('connection', function(client) {
 	console.log('A client connected.');
 
-	client.on('event', function(data) {
-		console.log('Event: ' + data);
+	client.on('injectWifiData', function(wifiData) {
+		console.log('Received wifi data:\n');
+
+		var jsonData = wifiData;
+
+		// Override timestamp with server timestamp to minimize time aberrations in the database
+		jsonData.timestamp = Date.now();
+
+		addToMongoDB(jsonData);
+		console.log('Add object to database:\n');
+		console.log(jsonData);
 	});
+
 	client.on('disconnect', function() {
 		console.log('A client disconnected.');
 	});
 });
-server.listen(3000);
+server.listen(port);
 
-console.log('Started websocket server');
+console.log('Started websocket server on port ' + port);
