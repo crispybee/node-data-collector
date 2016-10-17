@@ -4,7 +4,7 @@ var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
 // database URL
-var url = 'mongodb://localhost:27017/wifiscan';
+var url = 'mongodb://localhost:27018/wifiscan';
 var port = 3000;
 
 var saveToDatabase = function(db, jsonData, callback) {
@@ -38,7 +38,7 @@ io.on('connection', function(client) {
 	client.on('injectWifiData', function(wifiData) {
 		console.log('Received wifi data:\n');
 
-		var jsonData = wifiData;
+		var jsonData = JSON.parse(wifiData);
 
 		// Override timestamp with server timestamp to minimize time aberrations in the database
 		jsonData.timestamp = Date.now();
@@ -46,6 +46,10 @@ io.on('connection', function(client) {
 		addToMongoDB(jsonData);
 		console.log('Add object to database:\n');
 		console.log(jsonData);
+	});
+
+	client.on('test', function (data) {
+		console.log(data);
 	});
 
 	client.on('disconnect', function() {
